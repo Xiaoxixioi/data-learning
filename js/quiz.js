@@ -161,13 +161,11 @@
     const ta = el("textarea", "", "");
     ta.placeholder = "在这里写下你的回答…";
     ta.style.width = "100%";
-    ta.style.minHeight = "84px";
-    ta.style.padding = "10px";
-    ta.style.border = "1px solid var(--border)";
-    ta.style.borderRadius = "8px";
+    ta.style.minHeight = "5.2rem";
+    ta.style.padding = ".6rem";
+    ta.style.boxSizing = "border-box";
     ta.style.font = "inherit";
-    ta.style.border = "1px solid var(--border)";
-    ta.style.resize = "vertical";
+    ta.classList.add("fill-code");
     box.appendChild(ta);
     const foot = el("div", "quiz-foot");
     const submit = el("button", "btn primary", "查看参考要点");
