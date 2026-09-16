@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#4B3FE3">
+  <title>数据分析 · 碎片学习</title>
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+  <div id="app" class="app">
+    <main id="view" class="view"></main>
+
+    <!-- 底部导航 -->
+    <nav id="tabbar" class="tabbar" aria-label="主导航">
+      <button class="tab is-active" data-tab="skill">
+        <span class="tab-ic">技</span><span class="tab-lb">技能</span>
+      </button>
+      <button class="tab" data-tab="scenario">
+        <span class="tab-ic">场</span><span class="tab-lb">场景</span>
+      </button>
+      <button class="tab" data-tab="review">
+        <span class="tab-ic">回</span><span class="tab-lb">回顾</span>
+      </button>
+      <button class="tab" data-tab="mine">
+        <span class="tab-ic">我</span><span class="tab-lb">我的</span>
+      </button>
+    </nav>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script src="js/data.js"></script>
+  <script src="js/data-ext-sql.js"></script>
+  <script src="js/data-ext-python.js"></script>
+  <script src="js/data-ext-biz.js"></script>
+  <script src="js/store.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+/* tokens.css — 设计令牌，移动优先，浅色为主并兼容深色 */
+:root{
+  color-scheme: light;
+  --surface:#F7F7F8;
+  --surface-muted:#EFEFF2;
+  --surface-raise:#FFFFFF;
+  --text:#171717;
+  --text-muted:#52525B;
+  --text-faint:#8A8A93;
+  --border:rgba(23,23,23,0.12);
+  --brand:#4B3FE3;
+  --brand-soft:#F2F7FF;
+  --brand-soft-strong:#E5EAFF;
+  --brand-text:#1A1759;
+  --brand-on:#FFFFFF;
+  --accent:#27D2BF;
+  --accent-soft:#EAFBF8;
+  --accent-text:#0F766E;
+  --success:#1DC981;
+  --success-soft:#E8FBF1;
+  --warning:#EFAA17;
+  --danger:#E8463A;
+  --danger-soft:#FDEDEC;
+  --chart-other:#D3D4DA;
+  --radius:8px;
+  --radius-card:12px;
+  --radius-full:999px;
+  --spacer-4:4px; --spacer-8:8px; --spacer-12:12px; --spacer-16:16px; --spacer-20:20px; --spacer-24:24px;
+  --font-sans:"PingFang SC","Microsoft YaHei","SF Pro Text",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --font-mono:"JetBrains Mono","SF Mono",Menlo,Consolas,monospace;
+  --weight-regular:400; --weight-medium:500; --weight-strong:600;
+  --text-caption:12px/18px; --text-body:14px/20px; --text-title:16px/24px; --text-code:13px/20px;
+  --tabbar-h:58px; --header-h:56px;
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    color-scheme: dark;
+    --surface:#171719;
+    --surface-muted:#232326;
+    --surface-raise:#1F1F22;
+    --text:#E7E7EA;
+    --text-muted:#A3A3AC;
+    --text-faint:#7A7A84;
+    --border:rgba(231,231,234,0.12);
+    --brand:#6054F1;
+    --brand-soft:#1A1759;
+    --brand-soft-strong:#3C2ECA;
+    --brand-text:#D0D6FF;
+    --accent-soft:#123F3C;
+    --accent-text:#CCFBF1;
+    --success-soft:#123123;
+    --danger-soft:#3A1F1D;
+  }
+}
