@@ -136,6 +136,7 @@
       });
     }
     box.appendChild(chips);
+    renderOpts(); // 初始渲染候选选项，否则 chip 面板为空、无法填答
 
     const foot = el("div", "quiz-foot");
     const submit = el("button", "btn primary", "提交答案");
