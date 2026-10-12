@@ -76,31 +76,30 @@
 
     const codeParts = quiz.code.split(/(\{\d+\})/);
     const filled = {};      // slotIndex -> optIndex
-    const slotOrder = [];   // 填入顺序 optIndex
+    const slotOrder = [];   // 已填入的槽位顺序 slotIndex
     const slotEls = [];
-    const optUsed = new Set();
 
     const codeDiv = el("div");
     codeParts.forEach(part => {
       const m = part.match(/^\{(\d+)\}$/);
       if (m) {
-        (function (i) {
+        const s = slotEls.length; // 槽位按出现顺序编号，支持同一 {m} 占位符出现多次
+        (function (s) {
           const blank = el("span", "blank-token", "____");
-          blank.dataset.slot = i;
+          blank.dataset.slot = s;
           blank.onclick = function () {
-            const oi = filled[i];
+            const oi = filled[s];
             if (oi == null) return;
-            delete filled[i];
-            optUsed.delete(oi);
-            const idx = slotOrder.indexOf(oi);
+            delete filled[s];
+            const idx = slotOrder.indexOf(s);
             if (idx >= 0) slotOrder.splice(idx, 1);
             blank.textContent = "____";
             blank.classList.remove("filled");
             renderOpts();
           };
-          slotEls[i] = blank;
+          slotEls.push(blank);
           codeDiv.appendChild(blank);
-        })(parseInt(m[1], 10));
+        })(s);
       } else {
         codeDiv.appendChild(document.createTextNode(part));
       }
@@ -111,16 +110,23 @@
 
     const chips = el("div", "chips");
     const optsNow = quiz.fillOpts.map((v, i) => ({ v, i }));
+    function needOf(i) {
+      // 该选项在标准答案中需要的次数（值相等才计），支持同一选项填入多个空
+      return quiz.answer.filter(a => String(a) === String(optsNow[i].v)).length;
+    }
+    function usedOf(i) {
+      return slotOrder.filter(s => filled[s] === i).length;
+    }
     function renderOpts() {
       chips.innerHTML = "";
       optsNow.forEach((o, i) => {
-        const used = optUsed.has(i);
+        const used = needOf(i) > 0 && usedOf(i) >= needOf(i);
         const c = el("button", "chip" + (used ? " used" : ""), o.v);
         c.onclick = function () {
           if (used) return;
           // 填入第一个空槽
           for (let s = 0; s < slotEls.length; s++) {
-            if (filled[s] == null) { filled[s] = i; slotOrder.push(i); optUsed.add(i); break; }
+            if (filled[s] == null) { filled[s] = i; slotOrder.push(s); break; }
           }
           refreshBlanks();
           renderOpts();

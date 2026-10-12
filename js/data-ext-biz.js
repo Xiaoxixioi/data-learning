@@ -364,7 +364,7 @@ window.SCENARIO_EXT = (window.SCENARIO_EXT || []).concat([
   steps:[
     { type:"single", q:"留存分析里『次日留存』的分子与分母应分别是？", opts:["分子=第1天仍活跃的首日用户，分母=首日新增用户","分子=当日总活跃，分母=当日总活跃","分子=新增，分母=活跃","只比环比"], answer:0, explain:"分子分母都锁定首日人群，只把活跃窗口切到第 N 天。" },
     { type:"sqlfill", q:"补全 SQL：统计某日新增用户在次日仍活跃的去重用户数。", code:"SELECT COUNT(DISTINCT a.user_id)\nFROM users a\nJOIN events b\n  ON a.user_id = b.user_id\nWHERE a.first_active_day = '{0}'\n  AND b.active_day = DATE_ADD('{0}', INTERVAL {1} DAY)", fillOpts:["2026-09-16","1","7","b.amount>0"],
-      answer:["2026-09-16","1"], explain:"分母锁定首日新增，分子取次日仍活跃，DISTINCT 去重。" },
+      answer:["2026-09-16","2026-09-16","1"], explain:"分母锁定首日新增，分子取次日仍活跃，DISTINCT 去重。" },
     { type:"single", q:"拿到留存下降信号后，正确的下一步是？", opts:["先拆分维度（渠道/品类）定位流失人群，再给召回建议","直接下『留存在下降』结论","不采取动作","改口径更难看"], answer:0, explain:"从归因维度切入，才能给出可执行结论。" },
     { type:"open", q:"一句话总结留存分析结论（含数据证据与建议动作）。", refPoints:["写出留存率数值或趋势（证据）","给出主要归因维度（渠道/品类）","给出一条具体召回建议"], explain:"练习把留存数字组织成可决策的业务结论。" }
   ]
