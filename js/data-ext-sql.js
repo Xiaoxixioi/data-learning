@@ -229,6 +229,70 @@ FROM orders;`,
         }
       ]
     },
+    /* ============ 专题⑦ 空值与 COALESCE（SQLZoo Using Null 实战） ============ */
+    {
+      id:"sqa-t-null", name:"空值与 COALESCE：Using Null 实战", lessons:[
+        {
+          id:"sqa-null-find", title:"LEFT JOIN 找未匹配：dept IS NULL", mins:2,
+          knowledge:[
+            {head:"是什么", body:"LEFT JOIN 后右表没匹配上的行，右表各列都为 NULL。判断未匹配可看外键本身为空（t.dept IS NULL），或看右表主键为空（d.id IS NULL）。"},
+            {head:"何时用", body:"找没分配部门的老师、无订单的用户、缺配置的商品这类『孤儿数据』时使用。"},
+            {head:"易错点", body:"空值判断必须写 IS NULL / IS NOT NULL，写 = NULL 永远查不到行；用右表主键判空比普通列更严谨。"}
+          ],
+          example:{ title:"找出没有部门的老师", code:`-- 方式一：直接看外键为空
+SELECT name FROM teachers WHERE dept IS NULL;
+
+-- 方式二：LEFT JOIN 后看右表主键
+SELECT t.name, d.name
+FROM teachers t
+LEFT JOIN dept d ON t.dept = d.id
+WHERE d.id IS NULL;`, note:"方式二能顺带展示右表信息，判空也更严谨。" },
+          questions:[
+            { type:"single", q:"判断『没有部门』的老师，正确写法是？",
+              opts:["WHERE dept IS NULL","WHERE dept = NULL","WHERE dept <> NULL","WHERE dept = 'NULL'"],
+              answer:0, explain:"NULL 不能用 = 比较，必须用 IS NULL。" },
+            { type:"predict", q:"teachers 有 8 位老师，其中 3 位 dept 为 NULL。SELECT name FROM teachers WHERE dept IS NULL 返回几行？",
+              opts:["3 行","8 行","5 行","0 行"], answer:0, explain:"IS NULL 精确筛出外键为空的 3 位老师。" },
+            { type:"sqlfill", q:"补全：LEFT JOIN 后找出没有匹配到部门的老师。",
+              code:`SELECT t.name
+FROM teachers t
+LEFT JOIN dept d ON t.dept = d.id
+WHERE {0};`,
+              fillOpts:["d.id IS NULL","d.name IS NULL","t.dept IS NOT NULL","t.name IS NULL"],
+              answer:["d.id IS NULL"], explain:"LEFT JOIN 后右表主键 d.id 为空即未匹配；判断 d.name 不如主键严谨。" }
+          ]
+        },
+        {
+          id:"sqa-null-coalesce", title:"COALESCE / NULLIF：替换空值与防零", mins:2,
+          knowledge:[
+            {head:"COALESCE", body:"COALESCE(a, b, c) 从左到右取第一个非 NULL 值。常用 COALESCE(mobile, phone, '无号码') 把空值替换成兜底展示。"},
+            {head:"NULLIF", body:"NULLIF(a, b) 当 a=b 时返回 NULL，否则返回 a。典型用法 NULLIF(金额, 0)：把 0 变成 NULL，避免做除法时报错。"},
+            {head:"易错点", body:"COALESCE 至少两个参数、返回第一个非空；NULLIF 反向『相等变空』；两者搭配可做安全的除法兜底。"}
+          ],
+          example:{ title:"联系方式兜底与防除零", code:`-- 手机号为空退回固定电话，再没有显示'无号码'
+SELECT name,
+       COALESCE(mobile, phone, '无号码') AS contact
+FROM teachers;
+
+-- 把分母的 0 变成 NULL，人均计算不除零
+SELECT name, amount, NULLIF(amount, 0) AS safe_amount
+FROM orders;`, note:"COALESCE 多参数按顺序兜底；NULLIF 常用在分母防 0。" },
+          questions:[
+            { type:"single", q:"COALESCE(NULL, '备胎', '正选') 返回？",
+              opts:["'备胎'","NULL","'正选'","报错"], answer:0, explain:"从左到右取第一个非 NULL：跳过第一个，命中第二个 '备胎'。" },
+            { type:"predict", q:"NULLIF(0, 0) 的结果是？",
+              opts:["NULL","0","1","报错"], answer:0, explain:"两参数相等时返回 NULL，正用于把 0 转空。" },
+            { type:"sqlfill", q:"补全：手机号为空时退回固定电话。",
+              code:`SELECT name, {0} AS contact FROM teachers;`,
+              fillOpts:["COALESCE(mobile, phone)","NULLIF(mobile, phone)","CASE WHEN mobile IS NULL THEN phone END","IFNULL(mobile, phone)"],
+              answer:["COALESCE(mobile, phone)"], explain:"COALESCE 按顺序取第一个非空，手机号优先、为空用固定电话。" },
+            { type:"open", q:"为什么 NULLIF(amount, 0) 常用于计算人均/占比？请说明思路。",
+              refPoints:["分母为 0 时除法会报错或返回 NULL","NULLIF 先把 0 变成 NULL 避免除零","需要兜底展示时再配 COALESCE"],
+              explain:"先让分母的 0 变成 NULL，计算不炸，再按业务需要给默认值。" }
+          ]
+        }
+      ]
+    },
     /* ============ 专题④ 行转列 / 日期窗口与环比 ============ */
     {
       id:"sqa-t-pivot", name:"行转列 / 日期窗口与环比", lessons:[
