@@ -60,8 +60,10 @@
     const foot = el("div", "quiz-foot");
     const submit = el("button", "btn primary", "提交答案");
     submit.onclick = function () {
+      if (locked) return;
       if (chosen < 0) { ctx.toast("请先选择一个答案"); return; }
       locked = true;
+      foot.remove();   // 提交后移除提交按钮，避免重复提交重复弹出解析
       onAnswer(chosen);
     };
     foot.appendChild(submit);
@@ -78,6 +80,7 @@
     const filled = {};      // slotIndex -> optIndex
     const slotOrder = [];   // 已填入的槽位顺序 slotIndex
     const slotEls = [];
+    let locked = false;     // 提交后锁定，禁止再改答案或重复提交
 
     const codeDiv = el("div");
     codeParts.forEach(part => {
@@ -88,6 +91,7 @@
           const blank = el("span", "blank-token", "____");
           blank.dataset.slot = s;
           blank.onclick = function () {
+            if (locked) return;
             const oi = filled[s];
             if (oi == null) return;
             delete filled[s];
@@ -123,7 +127,7 @@
         const used = needOf(i) > 0 && usedOf(i) >= needOf(i);
         const c = el("button", "chip" + (used ? " used" : ""), o.v);
         c.onclick = function () {
-          if (used) return;
+          if (locked || used) return;
           // 填入第一个空槽
           for (let s = 0; s < slotEls.length; s++) {
             if (filled[s] == null) { filled[s] = i; slotOrder.push(s); break; }
@@ -147,10 +151,13 @@
     const foot = el("div", "quiz-foot");
     const submit = el("button", "btn primary", "提交答案");
     submit.onclick = function () {
+      if (locked) return;
       const n = slotEls.length;
       let empty = false;
       for (let s = 0; s < n; s++) if (filled[s] == null) empty = true;
       if (empty) { ctx.toast("请把所有空填完"); return; }
+      locked = true;
+      foot.remove();   // 提交后移除提交按钮；不论对错都给出解析
       // 判定：按槽位顺序比 opt 值
       const got = [];
       for (let s = 0; s < n; s++) got.push(optsNow[filled[s]].v);
@@ -176,7 +183,11 @@
     box.appendChild(ta);
     const foot = el("div", "quiz-foot");
     const submit = el("button", "btn primary", "查看参考要点");
+    let locked = false;
     submit.onclick = function () {
+      if (locked) return;
+      locked = true;
+      foot.remove();   // 查看后移除按钮，避免重复弹出参考要点
       const your = ta.value.trim();
       onAnswer({ your, refs: quiz.refPoints || [], explain: quiz.explain || "" });
     };

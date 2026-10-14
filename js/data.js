@@ -193,7 +193,7 @@ window.COURSES = [
           questions:[
             { type:"single", q:"WHERE area BETWEEN 200000 AND 250000，area=250000 的国家的会被选中吗？", opts:["会，BETWEEN 含边界","不会，只取严格小于","不确定，取决于排序","会报错"], answer:0, explain:"BETWEEN 是闭区间，两端边界值都包含。" },
             { type:"predict", q:"SELECT name FROM world WHERE name IN ('Sweden','Norway','Denmark')，若三国的名字都在表中，返回几行？", opts:["3 行","1 行","0 行","无限行"], answer:0, explain:"IN 列表里有几个匹配的值就返回几行。" },
-            { type:"sqlfill", q:"补全：筛出亚洲且人口超过 1000 万的国家。", code:"SELECT name FROM world\nWHERE continent = '{0}'\n  AND population {1} 10000000;", fillOpts:["'Asia'",">","<",">="], answer:["'Asia'",">"], explain:"continent 用 IN 或 = 指定 'Asia'，人口条件用 > 10000000。" }
+            { type:"sqlfill", q:"补全：筛出亚洲且人口超过 1000 万的国家。", code:"SELECT name FROM world\nWHERE continent = '{0}'\n  AND population {1} 10000000;", fillOpts:["Asia",">","<",">="], answer:["Asia",">"], explain:"continent 用 IN 或 = 指定 'Asia'，人口条件用 > 10000000。" }
           ]
         },
         {
@@ -207,7 +207,7 @@ window.COURSES = [
           questions:[
             { type:"single", q:"LIKE '_n%' 能匹配下面哪个名字？", opts:["Anastasia（第2个字符是 n）","China（第2个字符是 h）","Spain（第2个字符是 p）","France（第2个字符是 r）"], answer:0, explain:"_ 匹配第一个任意字符，n 必须是第 2 个字符。" },
             { type:"predict", q:"name LIKE '%land%' 会匹配下面哪个国家？", opts:["Poland（含 land）","Brazil","China","Japan"], answer:0, explain:"%land% 要求名字任意位置出现 land，Poland 满足。" },
-            { type:"sqlfill", q:"补全：找出名字以 'a' 结尾的国家。", code:"SELECT name FROM world\nWHERE name LIKE '{0}';", fillOpts:["'%a'","'a%'","'%a%'","'_a'"], answer:["'%a'"], explain:"%a 表示以 a 结尾，% 在左侧匹配前面的任意内容。" }
+            { type:"sqlfill", q:"补全：找出名字以 'a' 结尾的国家。", code:"SELECT name FROM world\nWHERE name LIKE '{0}';", fillOpts:["%a","a%","%a%","_a"], answer:["%a"], explain:"%a 表示以 a 结尾，% 在左侧匹配前面的任意内容。" }
           ]
         },
         {

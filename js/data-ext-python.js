@@ -44,7 +44,7 @@ window.COURSE_EXT=(window.COURSE_EXT||[]).concat([
           questions:[
             { type:"predict", q:"执行 pivot_table(index='month', columns='channel', values='gmv', aggfunc='sum') 后的表格形状是？", opts:["行是月份、列是渠道、值为 GMV","行是渠道、列是月份、值为订单数","一列长表","每个渠道单独一个表"], answer:0, explain:"index 决定行、columns 决定列、values+aggfunc 决定单元格数值，得到行列交叉透视。" },
             { type:"single", q:"想一次得到每个用户的总金额和订单数两个口径，正确写法是？", opts:["df.groupby('user_id').agg({'amount':'sum','order_id':'count'})","分两次 groupby 再拼","只 group 一列","df.mean()"], answer:0, explain:"agg 传字典可对多列分别指定不同聚合函数，一次出两个口径。" },
-            { type:"sqlfill", q:"补全：用 groupby 求每个用户的总金额与订单数。", code:"stats = df.groupby('user_id').agg({\n  'amount': '{0}',\n  'order_id': '{1}'\n})", fillOpts:["'sum'","'count'","'mean'","'max'"], answer:["'sum'","'count'"], explain:"金额求和用 sum，订单数数行用 count，分别按列指定 agg 函数。" }
+            { type:"sqlfill", q:"补全：用 groupby 求每个用户的总金额与订单数。", code:"stats = df.groupby('user_id').agg({\n  'amount': '{0}',\n  'order_id': '{1}'\n})", fillOpts:["sum","count","mean","max"], answer:["sum","count"], explain:"金额求和用 sum，订单数数行用 count，分别按列指定 agg 函数。" }
           ]
         }
       ]
